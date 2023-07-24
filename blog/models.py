@@ -1,30 +1,31 @@
 from django.db import models
 from django.utils.text import slugify
-from .utils import file_validate, mail_validation, get_upload_folder
+from .utils import file_md_validate, mail_validation, get_upload_folder, file_img_validate
 import uuid
 import os
 
-class Blog(models.Model):
-    class BlogCategory(models.TextChoices):
-        NEWS_AND_ANNOUNCEMENT = "news_and_announcement", "News And Announcement"
-        EVENT = "event", "Event"
-        GENERAL = "general", "General"
-        ACADEMICS = "academics", "Academics"
-        PARENTS_RESOURCE = "parents_resource", "Parents Resource"
-        CAREER = "career", "Career"
-        ACHIEVEMENTS = "acheivements", "Achievements"
-        POLICIES = "school_policies_guidelines", "School Policies And Guidelines"
-        HEALTH = "health_wellness", "Health and Wellness"
-        TECHNOLOGY = "technology", "Technology"
-        ARTS = "arts", "Arts"
-        SCIENCE = "science", "Science"
+class BlogCategory(models.TextChoices):
+    NEWS_AND_ANNOUNCEMENT = "news_and_announcement", "News And Announcement"
+    EVENT = "event", "Event"
+    GENERAL = "general", "General"
+    ACADEMICS = "academics", "Academics"
+    PARENTS_RESOURCE = "parents_resource", "Parents Resource"
+    CAREER = "career", "Career"
+    ACHIEVEMENTS = "acheivements", "Achievements"
+    POLICIES = "school_policies_guidelines", "School Policies And Guidelines"
+    HEALTH = "health_wellness", "Health and Wellness"
+    TECHNOLOGY = "technology", "Technology"
+    ARTS = "arts", "Arts"
+    SCIENCE = "science", "Science"
 
+class Blog(models.Model):
     slug = models.CharField(max_length=260, null=True, blank=True)
     topic = models.CharField(max_length=255, blank=False, null=False)
+    thumbnail = models.ImageField(upload_to="thumbnails", validators=[file_img_validate], null=False, blank=False)
     author = models.CharField(max_length=255, blank=False, null=False)
     is_approved = models.BooleanField(default=False)
     mail = models.EmailField(null=False, blank=False, validators=[mail_validation])
-    file = models.FileField(upload_to=get_upload_folder, validators=[file_validate], null=False, blank=False)
+    file = models.FileField(upload_to=get_upload_folder, validators=[file_md_validate], null=False, blank=False)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
