@@ -45,6 +45,4 @@ def file_img_validate(file):
 def get_upload_folder(instance, filename):
     ext = filename.split(".")[-1]
     filename = f"{instance.slug}-blog.{ext}"
-    if not instance.is_approved:
-        return "/".join(["blogs", "unapproved", filename])
-    return "/".join(["blogs", "approved", filename])
+    return "/".join(["blogs", filename])

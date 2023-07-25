@@ -18,14 +18,22 @@ class BlogCategory(models.TextChoices):
     ARTS = "arts", "Arts"
     SCIENCE = "science", "Science"
 
+class NoticeTag(models.TextChoices):
+    EVENT = "event", "Event"
+    NEWS = "news", "News"
+
+
 class Blog(models.Model):
     slug = models.CharField(max_length=260, null=True, blank=True)
     topic = models.CharField(max_length=255, blank=False, null=False)
+    description = models.CharField(max_length=255*2, blank=False, null=False)
     thumbnail = models.ImageField(upload_to="thumbnails", validators=[file_img_validate], null=False, blank=False)
     author = models.CharField(max_length=255, blank=False, null=False)
     is_approved = models.BooleanField(default=False)
+    is_rejected = models.BooleanField(default=False)
     mail = models.EmailField(null=False, blank=False, validators=[mail_validation])
     file = models.FileField(upload_to=get_upload_folder, validators=[file_md_validate], null=False, blank=False)
+    category = models.CharField(max_length=255, choices=BlogCategory.choices, null=False, blank=False)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
@@ -34,9 +42,7 @@ class Blog(models.Model):
         return f'{self.author} | {self.topic[:20]}...'
 
     def get_file_name(self):
-        if self.is_approved:
-            return "blogs/approved/" + f"{self.slug}-blog.md"
-        return "blogs/unapproved/" + f"{self.slug}-blog.md"
+        return "blogs/" + f"{self.slug}-blog.md"
 
     def save(self, *args, **kwargs):
         if self.slug is None:
@@ -54,6 +60,7 @@ class ShortNotice(models.Model):
     content = models.TextField()
     issued_by = models.CharField(max_length=255, null=False, blank=False)
     designation = models.CharField(max_length=255, null=False, blank=False)
+    tag = models.CharField(max_length=255, choices=NoticeTag.choices)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
