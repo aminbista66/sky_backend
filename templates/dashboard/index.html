@@ -26,9 +26,9 @@
             <h2
               class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200"
             >
-              Charts
+              System Users
             </h2>
-            {% include 'dashboard/components/charts.html' %}
+            {% include 'dashboard/components/table.html' %}
 
             {% if perms.blog.view_blog %}
             <h2
@@ -37,7 +37,7 @@
               Blogs
             </h2>
             <!-- New Table -->
-            {% include 'dashboard/components/table.html' %}
+            {% include 'dashboard/components/table_with_action.html' %}
             {% endif %}
 
 
